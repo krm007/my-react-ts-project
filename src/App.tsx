@@ -1,22 +1,28 @@
 import * as React from 'react';
 import './App.css';
+import withRoot from "./withRoot";
+import { HashRouter } from "react-router-dom";
+import { renderRoutes } from "react-router-config";
+import routerConfigs from "./router/routerConfigs";
+import JssProvider from "react-jss/lib/JssProvider";
+import createGenerateClassName from "@material-ui/core/styles/createGenerateClassName";
+import jssPreset from "@material-ui/core/styles/jssPreset";
+import { create } from "jss";
+// import logo from './logo.svg';
 
-import logo from './logo.svg';
+const generateClassName = createGenerateClassName();
+const jss = create(jssPreset());
 
 class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+          <JssProvider jss={jss} generateClassName={generateClassName}>
+              <HashRouter>{renderRoutes(routerConfigs)}</HashRouter>
+          </JssProvider>
       </div>
     );
   }
 }
 
-export default App;
+export default withRoot(App);

@@ -3,6 +3,120 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Below you will find some information on how to perform common tasks.<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
+###**项目搭建步骤**： 
+
+####1.使用脚手架：create-react-app resident-health-portal --scripts-version=react-scripts-ts生成react的typescript项目；
+
+####2.添加按需加载组件，安装@babel/plugin-syntax-dynamic-import, and react-loadable 插件，添加.babelrc 文件
+ 
+    内容：
+    {
+       "presets": ["@babel/react"],
+       "plugins": [
+       "transform-decorators-legacy",
+       "@babel/plugin-syntax-dynamic-import"
+       ]
+       }
+
+
+####3.添加 create-react-app 按需加载(详见 antd 官网关于 typescript 的配置)
+ 
+    yarn add antd
+ 
+高级配置：使用 react-app-rewired （一个对 create-react-app 进行自定义配置的社区解决方案），引入 react-app-rewired 并修改 package.json 里的启动配置：
+    
+    yarn add react-app-rewired --dev
+    
+ 修改package.json
+ 
+    "scripts": {
+    -   "start": "react-scripts-ts start",
+    +   "start": "react-app-rewired start --scripts-version react-scripts-ts",
+    -   "build": "react-scripts-ts build",
+    +   "build": "react-app-rewired build --scripts-version react-scripts-ts",
+    -   "test": "react-scripts-ts test --env=jsdom",
+    +   "test": "react-app-rewired test --env=jsdom --scripts-version react-scripts-ts",
+    }
+
+然后在项目根目录创建一个 config-overrides.js 用于修改默认配置。
+
+    module.exports = function override(config, env) {
+      // do stuff with the webpack config...
+      return config;
+    };
+使用ts-import-plugin 是一个用于按需加载组件代码和样式的 TypeScript 插件（原理），现在我们尝试安装它并修改 config-overrides.js 文件：
+    
+    /* config-overrides.js */
+    const tsImportPluginFactory = require('ts-import-plugin')
+    const { getLoader } = require("react-app-rewired");
+    
+    module.exports = function override(config, env) {
+      const tsLoader = getLoader(
+        config.module.rules,
+        rule =>
+          rule.loader &&
+          typeof rule.loader === 'string' &&
+          rule.loader.includes('ts-loader')
+      );
+    
+      tsLoader.options = {
+        getCustomTransformers: () => ({
+          before: [ tsImportPluginFactory({
+            libraryDirectory: 'es',
+            libraryName: 'antd',
+            style: 'css',
+          }) ]
+        })
+      };
+    
+      return config;
+    }
+按照 配置主题 的要求，自定义主题需要用到 less 变量覆盖功能。我们可以引入 react-app-rewire 的 less 插件 react-app-rewire-less 来帮助加载 less 样式，同时修改 config-overrides.js 文件。
+      
+      yarn add react-app-rewire-less --dev
+      
+      /* config-overrides.js */
+       const tsImportPluginFactory = require('ts-import-plugin')
+        const { getLoader } = require("react-app-rewired");
+      + const rewireLess = require('react-app-rewire-less');
+      
+        module.exports = function override(config, env) {
+          const tsLoader = getLoader(
+            config.module.rules,
+            rule =>
+              rule.loader &&
+              typeof rule.loader === 'string' &&
+              rule.loader.includes('ts-loader')
+          );
+      
+          tsLoader.options = {
+            getCustomTransformers: () => ({
+              before: [ tsImportPluginFactory({
+                libraryName: 'antd',
+                libraryDirectory: 'es',
+      -         style: 'css',
+      +         style: true,
+              }) ]
+            })
+          };
+      
+      +   config = rewireLess.withLoaderOptions({
+      +     javascriptEnabled: true,
+      +     modifyVars: { "@primary-color": "#1DA57A" },
+      +   })(config, env);
+      
+          return config;
+        }
+####4.接下在就可以安装其他需要的库了
+
+    yarn add @material-ui/core @material-ui/icons antd axios
+
+    yarn add immutable react-jss react-redux react-router react-router-config react-router-dom redux redux-actions redux-immutable redux-saga reselect typeface-roboto
+
+    yarn add @types/react-jss @types/react-loadable @types/react-redux @types/react-router @types/react-router-config @types/react-router-dom @types/redux-immutable @types/redux-action --dev
+
+
+
 ## Table of Contents
 
 - [Updating to New Releases](#updating-to-new-releases)
