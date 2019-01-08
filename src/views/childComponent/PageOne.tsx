@@ -1,6 +1,7 @@
 import {createStyles, Theme, withStyles} from '@material-ui/core/styles';
 import {WithStyles} from "@material-ui/core/styles/withStyles";
 import * as React from "react";
+import Test from "../test/Test";
 
 const styles = (theme: Theme) => createStyles<"root">({
     root: {}
@@ -17,8 +18,8 @@ class PageOne extends React.Component<Iprops> {
         const {classes} = this.props;
         return (
             <div className={classes.root} onClick={this.sss}>
-                lallalalalallaaaaaaaaaaaaaaaaaaaaaaaa
-
+                <p>这是一个表格</p>
+                <Test />
             </div>);
     }
 }

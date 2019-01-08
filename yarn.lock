@@ -213,6 +213,11 @@
   dependencies:
     redux "^4.0.1"
 
+"@types/redux-actions@^2.3.1":
+  version "2.3.1"
+  resolved "http://registry.npm.taobao.org/@types/redux-actions/download/@types/redux-actions-2.3.1.tgz#b574569d76df9a0963c421bf509bcf2d0c6b17d3"
+  integrity sha1-tXRWnXbfmgljxCG/UJvPLQxrF9M=
+
 "@types/redux-immutable@^4.0.0":
   version "4.0.0"
   resolved "http://registry.npm.taobao.org/@types/redux-immutable/download/@types/redux-immutable-4.0.0.tgz#fe26e05de2f0a99f38f21eb567c5499c855fa599"

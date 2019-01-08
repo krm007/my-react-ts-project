@@ -2,7 +2,7 @@
 import { RouteConfig } from "react-router-config";
 import { PageOne } from "../loading/LazyLoading";
 import PageTwo from "../views/childComponent/PageTwo";
-import Test from "../views/childComponent/Test";
+import Test from "../views/test/Test";
 
 const Child: RouteConfig[] = [
   {
